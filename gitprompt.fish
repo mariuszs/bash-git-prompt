@@ -22,9 +22,9 @@ set IBlack (set_color -o black)         # Black
 set Magenta (set_color -o purple)       # Purple
 
 # Default values for the appearance of the prompt. Configure at will.
-set GIT_PROMPT_PREFIX "("
-set GIT_PROMPT_SUFFIX ")"
-set GIT_PROMPT_SEPARATOR "|"
+set GIT_PROMPT_PREFIX ""
+set GIT_PROMPT_SUFFIX ""
+set GIT_PROMPT_SEPARATOR " "
 set GIT_PROMPT_BRANCH "$Magenta"
 set GIT_PROMPT_STAGED "$Red●"
 set GIT_PROMPT_CONFLICTS "$Red✖"
@@ -38,9 +38,16 @@ function fish_prompt
     # Various variables you might want for your PS1 prompt instead
     set Time (date +%R)
     set PathShort (prompt_pwd)
-    
+
     set PROMPT_START "$IBlack$Time $ResetColor$Yellow$PathShort$ResetColor"
     set PROMPT_END " \$ "
+
+    echo -e "$PROMPT_START$PROMPT_END"
+
+end
+
+
+function fish_right_prompt -d "Write out the right prompt"
 
     set -e __CURRENT_GIT_STATUS
     set gitstatus "$__GIT_PROMPT_DIR/gitstatus.py"
@@ -63,7 +70,7 @@ function fish_prompt
         set GIT_CLEAN $__CURRENT_GIT_STATUS[7]
     end
 
-	if test -n "$__CURRENT_GIT_STATUS"
+    if test -n "$__CURRENT_GIT_STATUS"
         set STATUS " $GIT_PROMPT_PREFIX$GIT_PROMPT_BRANCH$GIT_BRANCH$ResetColor"
 
         if set -q GIT_REMOTE
@@ -94,13 +101,6 @@ function fish_prompt
 
         set STATUS "$STATUS$ResetColor$GIT_PROMPT_SUFFIX"
 
-        set PS1 "$PROMPT_START$STATUS$PROMPT_END"
-	else
-        set PS1 "$PROMPT_START$PROMPT_END"
-	end
-
-    echo -e $PS1
-
+        echo -e "$STATUS"
+    end
 end
-
-
